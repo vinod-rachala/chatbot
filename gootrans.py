@@ -9,24 +9,22 @@ def detect_language(text):
     except:
         return "unknown"
 
-# Function to translate text to a target language (e.g., English)
-def translate_to_target_language(text, target_language="en"):
+# Function to translate text to a target language
+def translate_to_target_language(text, target_language):
     translator = Translator()
     translated_text = translator.translate(text, dest=target_language).text
     return translated_text
 
 # Multilingual chatbot
-def chatbot(input_text, target_language="en"):
+def chatbot(input_text):
     detected_language = detect_language(input_text)
     
-    if detected_language == target_language:
-        # If the detected language is the same as the target language, no translation is needed.
-        response = "You are speaking in " + target_language + ": " + input_text
-    else:
-        # Translate the input text to the target language
-        translated_text = translate_to_target_language(input_text, target_language)
-        response = "Detected language: " + detected_language + "\nTranslation: " + translated_text
-
+    # If the detected language is unknown, respond in English by default
+    target_language = detected_language if detected_language != "unknown" else "en"
+    
+    # Translate the input text to the detected language
+    response = translate_to_target_language(input_text, target_language)
+    
     return response
 
 if __name__ == "__main__":
