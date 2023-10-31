@@ -1,0 +1,26 @@
+# Use the official NVIDIA Triton Inference Server base image
+FROM nvcr.io/nvidia/tritonserver:21.09-py3
+
+# Set environment variables
+ENV TRITON_MODEL_REPO="/models"
+ENV MODEL_NAME="your_model_name"
+
+# Update and install necessary packages
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+&& rm -rf /var/lib/apt/lists/*
+
+# Install onnxruntime and catboostencoder
+RUN pip install onnxruntime catboostencoder
+
+# Expose the Triton Inference Server REST API port
+EXPOSE 8000
+
+# Copy your model to the model repository (replace with your actual model)
+COPY your_model_repository /models/your_model_name
+
+# Set the Triton Inference Server as the entry point
+ENTRYPOINT ["tritonserver", "--model-repository=${TRITON_MODEL_REPO}", "--model-name=${MODEL_NAME}"]
+
+#docker build -t your_image_name:your_tag .
+#docker run -d -p 8000:8000 your_image_name:your_tag
